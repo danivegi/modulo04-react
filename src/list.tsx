@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useOrg } from "./org-context";
 
+const PER_PAGE = 10;
+
 interface MemberEntity {
   id: string;
   login: string;
@@ -9,20 +11,22 @@ interface MemberEntity {
 }
 
 export const ListPage: React.FC = () => {
-  // La org "activa" (la ya buscada) vive en el Context -> sobrevive al navegar
-  // al detalle y volver. El input tiene su propio estado local (el borrador).
-  const { org, setOrg } = useOrg();
+  const { org, setOrg, page, setPage } = useOrg();
   const [filter, setFilter] = React.useState(org);
   const [members, setMembers] = React.useState<MemberEntity[]>([]);
 
   React.useEffect(() => {
-    fetch(`https://api.github.com/orgs/${org}/members`)
+    fetch(
+      `https://api.github.com/orgs/${org}/members?per_page=${PER_PAGE}&page=${page}`
+    )
       .then((response) => response.json())
-      // Si GitHub responde 403/404 devuelve un objeto (no un array): lo blindamos.
       .then((json) => setMembers(Array.isArray(json) ? json : []));
-  }, [org]);
+  }, [org, page]);
 
-  const handleSearch = () => setOrg(filter);
+  const handleSearch = () => {
+    setOrg(filter);
+    setPage(1); // nueva búsqueda -> volvemos a la primera página
+  };
 
   return (
     <>
@@ -48,6 +52,20 @@ export const ListPage: React.FC = () => {
             <Link to={`/detail/${member.login}`}>{member.login}</Link>
           </React.Fragment>
         ))}
+      </div>
+
+      <div className="pagination">
+        <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
+          Prev
+        </button>
+        <span>Page {page}</span>
+        {/* Heurística: si recibimos menos de PER_PAGE, no hay página siguiente */}
+        <button
+          disabled={members.length < PER_PAGE}
+          onClick={() => setPage(page + 1)}
+        >
+          Next
+        </button>
       </div>
     </>
   );
