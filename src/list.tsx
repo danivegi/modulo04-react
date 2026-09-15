@@ -25,7 +25,7 @@ export const ListPage: React.FC = () => {
 
   const handleSearch = () => {
     setOrg(filter);
-    setPage(1); // nueva búsqueda -> volvemos a la primera página
+    setPage(1); // si buscamos de nuevo vuelve a la primera página
   };
 
   return (
@@ -59,7 +59,7 @@ export const ListPage: React.FC = () => {
           Prev
         </button>
         <span>Page {page}</span>
-        {/* Heurística: si recibimos menos de PER_PAGE, no hay página siguiente */}
+        {/* Si recibimos menos de PER_PAGE, no hay página siguiente */}
         <button
           disabled={members.length < PER_PAGE}
           onClick={() => setPage(page + 1)}
