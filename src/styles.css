@@ -28,3 +28,26 @@
   gap: 12px;
   margin-top: 16px;
 }
+
+.nav {
+  margin-bottom: 16px;
+}
+
+.rm-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.rm-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.rm-card img { width: 100%; display: block; }
+.rm-card span { display: block; padding: 8px; }

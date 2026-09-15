@@ -9,6 +9,8 @@ import { OrgProvider } from "./org-context";
 import { LoginPage } from "./login";
 import { ListPage } from "./list";
 import { DetailPage } from "./detail";
+import { RickMortyListPage } from "./rick-morty-list";
+import { RickMortyDetailPage } from "./rick-morty-detail";
 
 export const App = () => {
   return (
@@ -18,6 +20,8 @@ export const App = () => {
           <Route path="/" element={<LoginPage />} />
           <Route path="/list" element={<ListPage />} />
           <Route path="/detail/:id" element={<DetailPage />} />
+          <Route path="/rick-morty" element={<RickMortyListPage />} />
+          <Route path="/rick-morty/:id" element={<RickMortyDetailPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

@@ -30,8 +30,12 @@ export const ListPage: React.FC = () => {
 
   return (
     <>
+      <div className="nav">
+        <Link to="/rick-morty">Rick &amp; Morty →</Link>
+      </div>
+ 
       <h2>GitHub members</h2>
-
+ 
       <div className="filter">
         <input
           value={filter}
@@ -40,7 +44,7 @@ export const ListPage: React.FC = () => {
         />
         <button onClick={handleSearch}>Search</button>
       </div>
-
+ 
       <div className="list-user-list-container">
         <span className="list-header">Avatar</span>
         <span className="list-header">Id</span>
@@ -53,7 +57,7 @@ export const ListPage: React.FC = () => {
           </React.Fragment>
         ))}
       </div>
-
+ 
       <div className="pagination">
         <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
           Prev
