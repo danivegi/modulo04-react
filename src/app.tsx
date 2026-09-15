@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { CssBaseline } from "@mui/material";
 import { OrgProvider } from "./org-context";
 import { LoginPage } from "./login";
 import { ListPage } from "./list";
@@ -15,6 +16,7 @@ import { RickMortyDetailPage } from "./rick-morty-detail";
 export const App = () => {
   return (
     <OrgProvider>
+      <CssBaseline />
       <Router>
         <Routes>
           <Route path="/" element={<LoginPage />} />
