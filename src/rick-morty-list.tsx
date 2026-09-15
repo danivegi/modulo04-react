@@ -1,5 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import {
+  Container,
+  Typography,
+  TextField,
+  Box,
+  Card,
+  CardActionArea,
+  CardMedia,
+  CardContent,
+  Button,
+} from "@mui/material";
 import { useDebounce } from "./use-debounce";
 
 interface CharacterEntity {
@@ -23,42 +34,59 @@ export const RickMortyListPage: React.FC = () => {
       )}`
     )
       .then((response) => response.json())
-      // Si no hay coincidencias, la API responde  "error"
       .then((json) => setCharacters(json.results ?? []));
   }, [debouncedSearch]);
 
   return (
-    <>
-      <div className="nav">
-        <Link to="/list">← GitHub members</Link>
-      </div>
+    <Container sx={{ py: 4 }}>
+      <Button component={RouterLink} to="/list" sx={{ mb: 2 }}>
+        ← GitHub members
+      </Button>
 
-      <h2>Rick & Morty characters</h2>
+      <Typography variant="h4" gutterBottom>
+        Rick &amp; Morty characters
+      </Typography>
 
-      <div className="filter">
-        <input
-          placeholder="Search character..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+      <TextField
+        fullWidth
+        size="small"
+        label="Search character..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        sx={{ mb: 2 }}
+      />
 
       {characters.length === 0 ? (
-        <p>No characters found.</p>
+        <Typography>No characters found.</Typography>
       ) : (
-        <div className="rm-list">
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+            gap: 2,
+          }}
+        >
           {characters.map((character) => (
-            <Link
-              key={character.id}
-              to={`/rick-morty/${character.id}`}
-              className="rm-card"
-            >
-              <img src={character.image} alt={character.name} />
-              <span>{character.name}</span>
-            </Link>
+            <Card key={character.id}>
+              <CardActionArea
+                component={RouterLink}
+                to={`/rick-morty/${character.id}`}
+              >
+                <CardMedia
+                  component="img"
+                  image={character.image}
+                  alt={character.name}
+                />
+                <CardContent>
+                  <Typography variant="subtitle1" align="center">
+                    {character.name}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
           ))}
-        </div>
+        </Box>
       )}
-    </>
+    </Container>
   );
 };

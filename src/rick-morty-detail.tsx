@@ -1,5 +1,13 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link as RouterLink, useParams } from "react-router-dom";
+import {
+  Container,
+  Typography,
+  Button,
+  Card,
+  CardMedia,
+  CardContent,
+} from "@mui/material";
 
 interface CharacterDetailEntity {
   id: number;
@@ -24,24 +32,32 @@ export const RickMortyDetailPage: React.FC = () => {
   }, [id]);
 
   if (!character) {
-    return <p>Loading...</p>;
+    return (
+      <Container sx={{ py: 4 }}>
+        <Typography>Loading...</Typography>
+      </Container>
+    );
   }
 
   return (
-    <>
-      <div className="nav">
-        <Link to="/rick-morty">← Back to characters</Link>
-      </div>
+    <Container sx={{ py: 4 }}>
+      <Button component={RouterLink} to="/rick-morty" sx={{ mb: 2 }}>
+        ← Back to characters
+      </Button>
 
-      <h2>{character.name}</h2>
-      <img src={character.image} alt={character.name} width={200} />
-      <ul>
-        <li>Status: {character.status}</li>
-        <li>Species: {character.species}</li>
-        <li>Gender: {character.gender}</li>
-        <li>Origin: {character.origin.name}</li>
-        <li>Location: {character.location.name}</li>
-      </ul>
-    </>
+      <Card sx={{ maxWidth: 400 }}>
+        <CardMedia component="img" image={character.image} alt={character.name} />
+        <CardContent>
+          <Typography variant="h5" gutterBottom>
+            {character.name}
+          </Typography>
+          <Typography>Status: {character.status}</Typography>
+          <Typography>Species: {character.species}</Typography>
+          <Typography>Gender: {character.gender}</Typography>
+          <Typography>Origin: {character.origin.name}</Typography>
+          <Typography>Location: {character.location.name}</Typography>
+        </CardContent>
+      </Card>
+    </Container>
   );
 };

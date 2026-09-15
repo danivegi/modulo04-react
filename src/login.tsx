@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Container, Typography, TextField, Button, Box } from "@mui/material";
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -17,30 +18,30 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <>
-      <form onSubmit={handleNavigation}>
-        <h2>Hello from login page</h2>
-
-        <div>
-          <div>
-            <label>Username: </label>
-            <input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Password: </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <button type="submit">Login</button>
-      </form>
-    </>
+    <Container maxWidth="xs" sx={{ py: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Login
+      </Typography>
+      <Box
+        component="form"
+        onSubmit={handleNavigation}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <TextField
+          label="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button type="submit" variant="contained">
+          Login
+        </Button>
+      </Box>
+    </Container>
   );
 };

@@ -1,5 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Stack,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableContainer,
+  Paper,
+  Avatar,
+  Link,
+} from "@mui/material";
 import { useOrg } from "./org-context";
 
 const PER_PAGE = 10;
@@ -25,52 +41,76 @@ export const ListPage: React.FC = () => {
 
   const handleSearch = () => {
     setOrg(filter);
-    setPage(1); // si buscamos de nuevo vuelve a la primera página
+    setPage(1);
   };
 
   return (
-    <>
-      <div className="nav">
-        <Link to="/rick-morty">Rick &amp; Morty →</Link>
-      </div>
- 
-      <h2>GitHub members</h2>
- 
-      <div className="filter">
-        <input
+    <Container sx={{ py: 4 }}>
+      <Button component={RouterLink} to="/rick-morty" sx={{ mb: 2 }}>
+        Rick &amp; Morty →
+      </Button>
+
+      <Typography variant="h4" gutterBottom>
+        GitHub members
+      </Typography>
+
+      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        <TextField
+          size="small"
+          label="Organization"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button onClick={handleSearch}>Search</button>
-      </div>
- 
-      <div className="list-user-list-container">
-        <span className="list-header">Avatar</span>
-        <span className="list-header">Id</span>
-        <span className="list-header">Name</span>
-        {members.map((member) => (
-          <React.Fragment key={member.id}>
-            <img src={member.avatar_url} />
-            <span>{member.id}</span>
-            <Link to={`/detail/${member.login}`}>{member.login}</Link>
-          </React.Fragment>
-        ))}
-      </div>
- 
-      <div className="pagination">
-        <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
+        <Button variant="contained" onClick={handleSearch}>
+          Search
+        </Button>
+      </Stack>
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Avatar</TableCell>
+              <TableCell>Id</TableCell>
+              <TableCell>Name</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {members.map((member) => (
+              <TableRow key={member.id}>
+                <TableCell>
+                  <Avatar src={member.avatar_url} alt={member.login} />
+                </TableCell>
+                <TableCell>{member.id}</TableCell>
+                <TableCell>
+                  <Link component={RouterLink} to={`/detail/${member.login}`}>
+                    {member.login}
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Stack direction="row" spacing={2} sx={{ mt: 2, alignItems: "center" }}>
+        <Button
+          variant="outlined"
+          disabled={page <= 1}
+          onClick={() => setPage(page - 1)}
+        >
           Prev
-        </button>
-        <span>Page {page}</span>
-        {/* Si recibimos menos de PER_PAGE, no hay página siguiente */}
-        <button
+        </Button>
+        <Typography>Page {page}</Typography>
+        <Button
+          variant="outlined"
           disabled={members.length < PER_PAGE}
           onClick={() => setPage(page + 1)}
         >
           Next
-        </button>
-      </div>
-    </>
+        </Button>
+      </Stack>
+    </Container>
   );
 };

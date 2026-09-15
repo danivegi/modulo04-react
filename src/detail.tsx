@@ -1,14 +1,18 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link as RouterLink, useParams } from "react-router-dom";
+import { Container, Typography, Button } from "@mui/material";
 
 export const DetailPage: React.FC = () => {
-  const {id} = useParams();
+  const { id } = useParams();
 
   return (
-    <>
-      <h2>Hello from Detail page</h2>
-      <h3>User Id: {id}</h3>
-      <Link to="/list">Back to list page</Link>
-    </>
+    <Container sx={{ py: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        User Id: {id}
+      </Typography>
+      <Button component={RouterLink} to="/list">
+        Back to list page
+      </Button>
+    </Container>
   );
 };
