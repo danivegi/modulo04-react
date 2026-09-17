@@ -12,29 +12,17 @@ import {
   Button,
 } from "@mui/material";
 import { useDebounce } from "./use-debounce";
-
-interface CharacterEntity {
-  id: number;
-  name: string;
-  image: string;
-  species: string;
-  status: string;
-}
+import { getCharacters } from "./rick-morty.api";
+import type { Character } from "./rick-morty.model";
 
 export const RickMortyListPage: React.FC = () => {
   const [search, setSearch] = React.useState("");
-  const [characters, setCharacters] = React.useState<CharacterEntity[]>([]);
+  const [characters, setCharacters] = React.useState<Character[]>([]);
 
   const debouncedSearch = useDebounce(search, 500);
 
   React.useEffect(() => {
-    fetch(
-      `https://rickandmortyapi.com/api/character/?name=${encodeURIComponent(
-        debouncedSearch
-      )}`
-    )
-      .then((response) => response.json())
-      .then((json) => setCharacters(json.results ?? []));
+    getCharacters(debouncedSearch).then(setCharacters);
   }, [debouncedSearch]);
 
   return (
