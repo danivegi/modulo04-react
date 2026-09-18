@@ -1,43 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import type { PictureInfo } from "./model";
-import { allPictures } from "./model";
 import { useCart } from "./cart-context";
+import { useCartItems } from "./use-cart-items";
 import {
-  Box,
   Paper,
   Typography,
   IconButton,
   List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
   Button,
-  Badge,
   Stack,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { CartItem } from "./cart-item";
+import { CartCollapsed } from "./cart-collapsed";
 
 export const Cart = () => {
-  const { cartIds, removeFromCart, clearCart } = useCart();
+  const { removeFromCart, clearCart } = useCart();
+  const items = useCartItems();
   const [visible, setVisible] = React.useState(true);
-
-  const items = cartIds
-    .map((id) => allPictures.find((picture) => picture.id === id))
-    .filter((picture): picture is PictureInfo => Boolean(picture));
 
   if (!visible) {
     return (
-      <Box sx={{ p: 2, borderLeft: "1px solid #ddd" }}>
-        <IconButton onClick={() => setVisible(true)} aria-label="Mostrar carrito">
-          <Badge badgeContent={items.length} color="primary">
-            <ShoppingCartIcon />
-          </Badge>
-        </IconButton>
-      </Box>
+      <CartCollapsed count={items.length} onShow={() => setVisible(true)} />
     );
   }
 
@@ -71,34 +56,17 @@ export const Cart = () => {
         <>
           <List>
             {items.map((picture) => (
-              <ListItem
+              <CartItem
                 key={picture.id}
-                disableGutters
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    onClick={() => removeFromCart(picture.id)}
-                    aria-label={`Remove ${picture.title}`}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar
-                    src={picture.picUrl}
-                    alt={picture.title}
-                    variant="rounded"
-                  />
-                </ListItemAvatar>
-                <ListItemText primary={picture.title} />
-              </ListItem>
+                picture={picture}
+                onRemove={removeFromCart}
+              />
             ))}
           </List>
 
           <Stack spacing={1} sx={{ mt: 1 }}>
             <Button component={Link} to="/checkout" variant="contained">
-              Ver pedido
+              Checkout →
             </Button>
             <Button onClick={clearCart} color="error" variant="outlined">
               Vaciar carrito
