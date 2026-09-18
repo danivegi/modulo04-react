@@ -6,13 +6,10 @@ import {
   TableCell,
   TableContainer,
   Paper,
-  Checkbox,
-  TextField,
-  Button,
-  Stack,
-  Chip,
 } from "@mui/material";
 import { useOrder } from "./order-context";
+import { DetailToolbar } from "./detail-toolbar";
+import { OrderLineRow } from "./order-line-row";
 
 export const Detail = () => {
   const { state, dispatch } = useOrder();
@@ -20,22 +17,11 @@ export const Detail = () => {
 
   return (
     <>
-      <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-        <Button
-          variant="outlined"
-          disabled={noneSelected}
-          onClick={() => dispatch({ type: "VALIDATE_SELECTED" })}
-        >
-          Validar
-        </Button>
-        <Button
-          variant="outlined"
-          disabled={noneSelected}
-          onClick={() => dispatch({ type: "INVALIDATE_SELECTED" })}
-        >
-          Invalidar
-        </Button>
-      </Stack>
+      <DetailToolbar
+        disabled={noneSelected}
+        onValidate={() => dispatch({ type: "VALIDATE_SELECTED" })}
+        onInvalidate={() => dispatch({ type: "INVALIDATE_SELECTED" })}
+      />
 
       <TableContainer component={Paper}>
         <Table>
@@ -48,44 +34,19 @@ export const Detail = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {state.lines.map((line) => {
-              const selected = state.selectedIds.includes(line.id);
-              return (
-                <TableRow key={line.id} selected={selected}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selected}
-                      onChange={() =>
-                        dispatch({ type: "TOGGLE_SELECTED", id: line.id })
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={line.validated ? "Válido" : "Pendiente"}
-                      color={line.validated ? "success" : "default"}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>{line.description}</TableCell>
-                  <TableCell>
-                    <TextField
-                      type="number"
-                      size="small"
-                      value={line.importe}
-                      onChange={(e) =>
-                        dispatch({
-                          type: "UPDATE_IMPORTE",
-                          id: line.id,
-                          importe: Number(e.target.value),
-                        })
-                      }
-                      sx={{ width: 120 }}
-                    />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {state.lines.map((line) => (
+              <OrderLineRow
+                key={line.id}
+                line={line}
+                selected={state.selectedIds.includes(line.id)}
+                onToggleSelect={(id) =>
+                  dispatch({ type: "TOGGLE_SELECTED", id })
+                }
+                onUpdateImporte={(id, importe) =>
+                  dispatch({ type: "UPDATE_IMPORTE", id, importe })
+                }
+              />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
